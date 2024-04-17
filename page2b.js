@@ -4,11 +4,14 @@ import { View, Text, Button, Image, Pressable, StyleSheet, TextInput, ScrollView
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RefreshControl } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
 
 
 
 
 export default function Planner3Screen({ navigation }) {
+    const video = React.useRef(null);
+    const [status, setStatus] = React.useState({});
     const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = async () => {
@@ -31,7 +34,15 @@ export default function Planner3Screen({ navigation }) {
                 </View>
         <View style={styles.main_container}>
                 <View style={styles.image_container}>
-                        <Image source={require('./Component/assets2/Squat.png')} style={styles.image} />
+                        <Video
+                            ref={video}
+                            style={styles.video}
+                            source={require('./Component/assets2/Squat1.mp4')}
+                            useNativeControls
+                            resizeMode={ResizeMode.CONTAIN}
+                            isLooping
+                            onPlaybackStatusUpdate={status => setStatus(() => status)}
+                        />
                 </View>
              <View style={styles.description_container}>
                 <View style={styles.description_text1} >
@@ -129,6 +140,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
    backgroundColor:"#ffffff",
  
+    },
+    video: {
+        alignSelf: 'center',
+        width: 365,
+        height: 280,
+        borderRadius: 9,
     },
     back: {
         width: 30,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import { View, Text, Button, Image, Pressable, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -19,6 +19,59 @@ export default function Planner4Screen({ navigation }) {
         // ...
         setRefreshing(false); // Reset refreshing state after data is fetched
     };
+    const [countdown, setCountdown] = useState(15);
+
+    useEffect(() => {
+        // Start the countdown when the component mounts
+        const timer = countdown > 0 && setInterval(() => setCountdown(countdown -1), 1000);
+
+        // Clean up the timer when the component unmounts
+        return () => clearInterval(timer);
+    }, [countdown]);
+
+    const startCountdown = () => {
+        // Reset the countdown to 15 when the button is clicked
+        setCountdown(15);
+    };
+
+    const [text, setText] = useState('Done');
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setText('Next');
+        }, 15000); // 15 seconds in milliseconds
+
+        // Clean up the timer to prevent memory leaks
+        return () => clearTimeout(timer);
+    }, [text]); // Empty dependency array ensures the effect runs only once after component mounts
+
+    const startText = () => {
+        // Reset the countdown to 15 when the button is clicked
+        setText('Done');
+    };
+
+
+    const [clicked, setClicked] = useState(false);
+
+    const goToNextScreen = () => {
+        // Set the clicked state to true when the button is clicked
+        setClicked(true);
+    };
+
+    // Use useEffect to navigate to the next screen after 16 seconds when the button is clicked
+    useEffect(() => {
+        if (clicked) {
+            const timer = setTimeout(() => {
+                navigation.navigate('planner2');
+            }, 1000); // 16 seconds in milliseconds
+
+            // Clean up the timer when the component unmounts
+            return () => clearTimeout(timer);
+        }
+    }, [clicked, navigation]);
+
+
+
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollview1} showsVerticalScrollIndicator={false}>
@@ -33,15 +86,7 @@ export default function Planner4Screen({ navigation }) {
                 </View>
                 <View style={styles.main_container}>
                     <View style={styles.image_container}>
-                        <Video
-                            ref={video}
-                            style={styles.video}
-                            source={require('./Component/assets2/Squat1.mp4')}
-                            useNativeControls
-                            resizeMode={ResizeMode.CONTAIN}
-                            isLooping
-                            onPlaybackStatusUpdate={status => setStatus(() => status)}
-                        />
+                        <Image source={require('./Component/assets2/Squat.png')} style={styles.image} />
                     </View>
                     <View style={styles.description_container}>
                         <View style={styles.description_text1} >
@@ -79,15 +124,17 @@ export default function Planner4Screen({ navigation }) {
                         <View style={styles.alarm_cont}>
                             <Image source={require('./assets/alarm-clock.png')} style={styles.alarm} />  
                             <Text style={styles.alarm_text}>
-                            00:12
+                                    00:{countdown}
                             </Text>
                          </View>
-                            <View style={styles.tick_cont}>
+                            <Pressable onPress={goToNextScreen}>
+                            <View style={styles.tick_cont}  >
                                 <Image source={require('./assets/check.png')} style={styles.tick} />
-                                <Text style={styles.tick_text}>
-                                    Done
+                                <Text style={styles.tick_text} onPress={startCountdown}>
+                                    {text}
                                 </Text>
                             </View>
+                            </Pressable>
                     </View>
                     </View>
                 </View>
@@ -117,6 +164,11 @@ const styles = StyleSheet.create({
         height: 30,
         marginRight: 340,
         top: 40,
+    },
+    image: {
+        width: 370,
+        height: 370,
+        borderRadius: 8,
     },
     image_container: {
 

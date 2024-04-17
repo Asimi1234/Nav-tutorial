@@ -1,16 +1,59 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { View, Text, Button, Image, Pressable,StyleSheet, ImageBackground, TextInput, } from 'react-native';
+import { View, Text, Button, Image, Pressable,StyleSheet, ImageBackground, TextInput,Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FastImage from 'react-native-fast-image';
 
 
 export default function DetailsScreen({ navigation }) {
-    const [isChecked, setIsChecked] = useState(false);
-    const handleCheckboxChange = () => {
-        setIsChecked(!isChecked); // Toggle the checkbox state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    // Function to handle changes in the email input
+    const handleEmailChange = (text) => {
+        setEmail(text);
     };
+
+    // Function to handle changes in the password input
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+
+    // Function to validate email format
+    const validateEmail = (email) => {
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        return isValid;
+    };
+
+    // Function to validate password strength
+    const validatePassword = (password) => {
+        const isValid = password.length >= 8;
+        return isValid;
+    };
+
+    // Function to handle navigation to the next screen
+    const navigateToNextScreen = () => {
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+
+        if (isEmailValid && isPasswordValid) {
+            // Navigate to the 'Welcome2' screen
+            navigation.navigate('welcome2');
+        } else {
+            // Display error messages for invalid inputs
+            if (!isEmailValid) {
+                Alert.alert('Invalid Email', 'Please enter a valid email address');
+            }
+            if (!isPasswordValid) {
+                Alert.alert('Weak Password', 'Password must be at least 8 characters long');
+            }
+        }
+    };
+
+
+
+
     return (
         
         <ImageBackground
@@ -28,20 +71,40 @@ export default function DetailsScreen({ navigation }) {
                
                     
             <Text style={styles.welcome}>Welcome back!</Text>
-<View style={styles.Textinput_container}>
+            <View style={styles.Textinput_container}>
             <View>  
-            <Text style={styles.Input_title}>Email</Text>     
-            <TextInput style={styles.textInput}></TextInput>
+            <Text style={styles.Input_title}>Email</Text> 
+                          
+                        <TextInput
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={handleEmailChange}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            autoCompleteType="email"
+                            textContentType="emailAddress"
+                            style={styles.textInput}
+                        />
              </View>
                   <View>  
                     <View style={styles.password_container}>
                     <Text style={styles.Input_title}>Password</Text>
                      <Text style={styles.Input_title_Forgot_password}>Forgot Password?</Text>
                     </View>
-                    <TextInput style={styles.textInput}></TextInput>
+                      
+                        <TextInput
+                            placeholder="Password"
+                            value={password}
+                            onChangeText={handlePasswordChange}
+                            secureTextEntry
+                            textContentType="password"
+                            style={styles.textInput}
+                        />
                    </View>
             <View style={styles.Login}>
-                        <Pressable onPress={() => navigation.navigate('welcome2')}>
+                        <Pressable
+                            title="Next"
+                            onPress={navigateToNextScreen}>
          <Text style={styles.Login_text}>Log In</Text>
             </Pressable>
             </View>
@@ -100,6 +163,8 @@ const styles = StyleSheet.create({
         borderRadius:9,
         width:350,
         height:45,
+        color:"white",
+        paddingLeft:15,
     },
     welcome:{
         fontSize:25,
