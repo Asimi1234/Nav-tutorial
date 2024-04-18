@@ -12,8 +12,7 @@ import { Video, ResizeMode } from 'expo-av';
 
 export default function MainScreen({ navigation }) {
     const video = React.useRef(null);
-    const [status, setStatus] = React.useState({});
-
+    const [videoStatus, setVideoStatus] = useState({});
     const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = async () => {
@@ -61,6 +60,7 @@ export default function MainScreen({ navigation }) {
                         <Text style={styles.Cardio}>Cardio</Text>
                         <Text style={styles.see_more}>See more</Text>
                     </View>
+                    
                     <View style={styles.video_container}>
                         <View style={styles.video_container1}>
                             {Videos.map((items) => (
@@ -72,7 +72,7 @@ export default function MainScreen({ navigation }) {
                                         useNativeControls
                                         resizeMode={ResizeMode.CONTAIN}
                                         isLooping
-                                        onPlaybackStatusUpdate={status => setStatus(() => status)}
+                                        onPlaybackStatusUpdate={status => setVideoStatus(status)}
                                     />
                                 </View>
                             ))}
@@ -92,7 +92,7 @@ export default function MainScreen({ navigation }) {
                                         useNativeControls
                                         resizeMode={ResizeMode.CONTAIN}
                                         isLooping
-                                        onPlaybackStatusUpdate={status => setStatus(() => status)}
+                                        onPlaybackStatusUpdate={status => setVideoStatus(status)}
                                     />
                                 </View>
                             ))}
@@ -113,7 +113,7 @@ export default function MainScreen({ navigation }) {
                                         useNativeControls
                                         resizeMode={ResizeMode.CONTAIN}
                                         isLooping
-                                        onPlaybackStatusUpdate={status => setStatus(() => status)}
+                                        onPlaybackStatusUpdate={status => setVideoStatus(status)}
                                     />
                                 </View>
                             ))}
@@ -389,6 +389,11 @@ function App() {
                         headerShown: false
                     }}
                 />
+                <Stack.Screen name="header" component={HeaderScrollView}
+                    options={{
+                        headerShown: false
+                    }}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
@@ -401,6 +406,7 @@ import { Videos2 } from './Component/Video2';
 import { Videos3 } from './Component/Video3';
 import PlanScreen from './Page2';
 import FastImage from 'react-native-fast-image';
+import HeaderScrollView from './headerScroll';
 
 // Import your screen components
 

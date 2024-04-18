@@ -27,7 +27,7 @@ function HomeScreen({ navigation }) {
             </Text>
         </TouchableOpacity>
           <View style={styles.Navigation_Container2} >
-          <Pressable onPress={() => navigation.navigate('Details')} >
+          <Pressable onPress={() => navigation.navigate('Details') } >
             <Text style={styles.Navigation_text2} >
               Login
             </Text>
@@ -202,6 +202,11 @@ function App() {
             headerShown: false
           }}
         />
+        <Stack.Screen name="header" component={HeaderScrollView}
+          options={{
+            headerShown: false
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -217,6 +222,7 @@ import planner2Screen from './page2a';
 import Planner2Screen from './page2a';
 import Planner3Screen from './page2b';
 import Planner4Screen from './page2c';
+import HeaderScrollView from './headerScroll';
 // Import your screen components
 
 
