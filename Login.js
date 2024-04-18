@@ -5,53 +5,35 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FastImage from 'react-native-fast-image';
 
+function validateInput(input, type) {
+    const regexMap = {
+        email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    };
 
+    return regexMap[type].test(input);
+}
 export default function DetailsScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // Function to handle changes in the email input
     const handleEmailChange = (text) => {
         setEmail(text);
     };
 
-    // Function to handle changes in the password input
     const handlePasswordChange = (text) => {
         setPassword(text);
     };
 
-    // Function to validate email format
-    const validateEmail = (email) => {
-        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        return isValid;
-    };
-
-    // Function to validate password strength
-    const validatePassword = (password) => {
-        const isValid = password.length >= 8;
-        return isValid;
-    };
-
-    // Function to handle navigation to the next screen
-    const navigateToNextScreen = () => {
-        const isEmailValid = validateEmail(email);
-        const isPasswordValid = validatePassword(password);
-
-        if (isEmailValid && isPasswordValid) {
-            // Navigate to the 'Welcome2' screen
-            navigation.navigate('welcome2');
+    const handleFormSubmit = () => {
+        if (validateInput(email, 'email') && validateInput(password, 'password')) {
+            Alert.alert('Success', 'Form submitted successfully!');
+            // Add further logic for form submission
+            navigation.navigate('welcome');
         } else {
-            // Display error messages for invalid inputs
-            if (!isEmailValid) {
-                Alert.alert('Invalid Email', 'Please enter a valid email address');
-            }
-            if (!isPasswordValid) {
-                Alert.alert('Weak Password', 'Password must be at least 8 characters long');
-            }
+            Alert.alert('Error', 'Please enter a valid email and password.');
         }
     };
-
-
 
 
     return (
@@ -77,13 +59,11 @@ export default function DetailsScreen({ navigation }) {
                           
                         <TextInput
                             placeholder="Email"
-                            value={email}
                             onChangeText={handleEmailChange}
+                            value={email}
                             keyboardType="email-address"
                             autoCapitalize="none"
-                            autoCompleteType="email"
-                            textContentType="emailAddress"
-                            style={styles.textInput}
+                           style={styles.textInput}  
                         />
              </View>
                   <View>  
@@ -91,20 +71,18 @@ export default function DetailsScreen({ navigation }) {
                     <Text style={styles.Input_title}>Password</Text>
                      <Text style={styles.Input_title_Forgot_password}>Forgot Password?</Text>
                     </View>
-                      
                         <TextInput
                             placeholder="Password"
-                            value={password}
                             onChangeText={handlePasswordChange}
+                            value={password}
                             secureTextEntry
-                            textContentType="password"
-                            style={styles.textInput}
+                           style={styles.textInput} 
                         />
                    </View>
             <View style={styles.Login}>
                         <Pressable
                             title="Next"
-                            onPress={navigateToNextScreen}>
+                            onPress={handleFormSubmit}>
          <Text style={styles.Login_text}>Log In</Text>
             </Pressable>
             </View>
